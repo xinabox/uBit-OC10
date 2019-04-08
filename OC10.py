@@ -18,19 +18,16 @@ class OC10:
      
     def init(self, state=PCA9554A_ALL_OUTPUTS_OFF):
         self.writePin(state)
-        i2c.write(self.addr, PCA9554A_REG_CONFIG)
-        i2c.write(self.addr, PCA9554A_CONF_OUTPUT)
+        i2c.write(self.addr, bytearray([PCA9554A_REG_CONFIG, PCA9554A_CONF_OUTPUT]))
         return True
     
     def writePin(self, state):
         if state is True:
-            i2c.write(self.addr, PCA9554A_REG_OUTPUT_PORT)
-            i2c.write(self.addr, 0x01)
+            i2c.write(self.addr, bytearray([PCA9554A_REG_OUTPUT_PORT, 0x01]))
         elif state is False:
-            i2c.write(self.addr, PCA9554A_REG_OUTPUT_PORT)
-            i2c.write(self.addr, 0x00)
+            i2c.write(self.addr, bytearray([PCA9554A_REG_OUTPUT_PORT, 0x00]))
     
     def getStatus(self):
         i2c.write(self.addr, PCA9554A_REG_OUTPUT_PORT)
-        pin_state = i2c.read(self.addr, 1)[0]
-        return pin_state
+        pin_state = i2c.read(self.addr, 1)
+        return pin_state[0]
